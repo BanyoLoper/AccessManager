@@ -1,14 +1,12 @@
-import json
+import os
 
 from datetime import datetime
-from flask import Flask
-from flask import request
-from flask import jsonify
+from flask import Flask, request, jsonify
 
 from deta import Deta
 
 
-deta = Deta("pass-manager")
+deta = Deta(os.getenv('PROJECT_KEY'))
 db = deta.Base('simpleDB')
 app = Flask(__name__)
 
@@ -23,13 +21,14 @@ def create_password():
     pwd = request.json.get("pwd")
     now = datetime.now()
 
-    insert = db.put({
+    insert = db.insert({
         "name":name,
         "password": pwd,
         "updated": now.strftime("%d/%m/%Y %H:%M:%S")
     })
 
     return jsonify(insert, 201)
+    # return jsonify({"name": name, "pwd": pwd, "updated": now.strftime("%d/%m/%Y %H:%M:%S")})
 
 @app.route("/load", methods=["GET"])
 def get_register(key):
