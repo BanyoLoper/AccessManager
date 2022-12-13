@@ -28,9 +28,8 @@ def create_password():
     })
 
     return jsonify(insert, 201)
-    # return jsonify({"name": name, "pwd": pwd, "updated": now.strftime("%d/%m/%Y %H:%M:%S")})
 
-@app.route("/load", methods=["GET"])
-def get_register(key):
+@app.route("/load/<key>", methods=["GET"])
+def load_key(key):
     pwd = db.get(key)
     return pwd if pwd else jsonify({"error":"Not Found"}, 404)
